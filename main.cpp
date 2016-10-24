@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string.h>
+
 using namespace std;
 
 /*
@@ -15,7 +17,7 @@ public:
 		theWord = _theWord;
 		theDef = _theDef;
 		theOrigin = _theOrigin;
-		wordLength = length(theWord); // Idk what the actual function call is.
+		wordLength = strlen(theWord); // Idk what the actual function call is.
 	}
 
 	string getWord(){
@@ -91,9 +93,9 @@ public:
 
 class WordLibrary{
 private:
-	Adjective *myAdjectives;
-	Verb *myVerbs;
-	Noun *myNouns;
+	Adjective * myAdjectives;
+	Verb * myVerbs;
+	Noun * myNouns;
 	int totalWords = 0 , totalAdjectives = 0, totalVerbs = 0, totalNouns = 0;
 public:
 
@@ -102,13 +104,35 @@ public:
 	*/
 
 	WordLibrary(){
+		//Open ioStream
+
+		//First, let's do a count of the data we have.
 
 		while(/* File has another line */){
-			push(_partOfSpeech, _theWord, _theDef, _theOrigin);
 			totalWords++;
+			if(/* Word is an Adjective*/){
+				totalAdjectives++;
+			}else if(/* Word is a Noun */){
+				totalNouns++;
+			}else if(/* Word is a Verb */){
+				totalVerbs++;
+			}
 		}
-		
 
+		//Now we can initiate lists
+
+		myAdjectives = new Adjective[totalAdjectives];
+		myVerbs = new Verb[totalVerbs];
+		myNouns = new Noun[totalNouns];
+
+		//Okay, now let's populate by pushing.
+
+		while(/*file has another line */){
+			string _partOfSpeech, _theWord, _theDef, _theOrigin;
+			push(_partOfSpeech, _theWord, _theDef, _theOrigin);
+		}
+
+		//Close ioStream
 	}
 
 	/*
