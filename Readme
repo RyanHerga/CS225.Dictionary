@@ -3,9 +3,9 @@ Dictionary Project
 
 Application will:
 
-<ol>
+<ul>
 	<li>Load list of words, definitions from an external file</li>
 	<li>Provide the user with a dictionary definition</li>
 	<li>User will get X chances to guess letters that may be in the word.</li>
 	<li>User will be able to /solve [string] to solve the entire word.</li>
-</ol>
+</ul>
