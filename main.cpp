@@ -227,20 +227,42 @@ private:
 	string guessedWord;
 	int numOfRounds;
 	int completedRounds;
+
 public:
 	Engine(int numOfRounds = 5){
 		completedRounds = 0;		
 		points = 0;
 		activeWord = myDictionary.getRandomWord();
+		//Pick Random Word;
 	}
 
-	addPoint(){
+	void newGame(){
+		cout << "Menu: " << endl;
+		cout << "Type 'go' to start the game." << endl;
+		cout << "Type 'help' for instructions." << endl;
+
+		cout << "\n Enter Command: ";
+		cin >> userInput;
+
+		switch(userInput){
+			case "go":
+				cout << "Here we go! Type 'skip' to skip a word. " << endl;
+				go();
+			break;
+
+			case "help":
+
+			break;
+		}
+	}
+
+	void addPoint(){
 		points++;
 	}
 
 	void go(){
-		//Pick Random Word;
-		
+
+		cout << "Round #" << completedRounds + 1 << endl;
 		cout << "Definition: " << activeWord.getDef() << endl;
 		cout << "Origin: " << activeWord.getOrigin() << endl;
 		cout << "Part of Speech: " << activeWord.getPartOfSpeech() << endl;
@@ -264,6 +286,7 @@ public:
 			nextWord();
 		}else{
 			cout << "You got " << points << " points, out of a possible " << numOfRounds << "points" << endl;
+			newGame();
 		}
 
 
@@ -277,28 +300,13 @@ public:
 
 int main(){
 	string userInput;
-	Engine gameEngine;
-	//Start Game
+
 	cout << "DICTIONARY GAME" << endl;
 	cout << "-------------------------------" << endl;
 
-	cout << "Menu: " << endl;
-	cout << "Type 'go' to start the game." << endl;
-	cout << "Type 'help' for instructions." << endl;
-	cout << "\n Enter Command: ";
-	cin >> userInput;
-
-	switch(userInput){
-		case "go":
-			cout << "Here we go! Type 'skip' to skip a word. " << endl;
-
-		break;
-
-		case "help":
-
-		break;
-	}
-
+	Engine gameEngine;
+	//Start Game
+	
 	return 0;
 }
 
