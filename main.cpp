@@ -13,11 +13,31 @@ private:
 	string theOrigin;
 	int wordLength;
 public:
-	Word(string _theWord, string _theDef. string _theOrigin = "Unknown"){
+	Word(string _theWord, string _theDef, string _theOrigin = "Unknown"){
 		theWord = _theWord;
 		theDef = _theDef;
 		theOrigin = _theOrigin;
-		wordLength = strlen(theWord); // Idk what the actual function call is.
+		wordLength = theWord.length();
+		 // Idk what the actual function call is.
+	}
+
+	Word(){
+		theOrigin = "Unknown";
+		theWord = "Null";
+		theDef = "Null";
+		wordLength = 0;
+		// Blank Constructor
+	}
+
+	void setWord(string _theWord){
+		theWord = _theWord;
+		wordLength = theWord.length();
+	}
+	void setDef(string _theDef){
+		theDef = _theDef;
+	}
+	void setOrigin(string _theOrigin){
+		theOrigin = _theOrigin;
 	}
 
 	string getWord(){
@@ -43,13 +63,19 @@ public:
 
 class Adjective : virtual public Word{
 	private:
-		string partOfSpeech = "Adjective";
-		string partOfSpeechShort = "Adj";
+		string partOfSpeech;
+		string partOfSpeechShort;
 	public:
-		string getPartOfSpeech(){
+		Adjective() : Word(){
+			partOfSpeech = "Adjective";
+			partOfSpeechShort = "Adj";
+		}
+
+		string getPartOfSpeech(){		
 			return partOfSpeech;
 		}
-		string getShortPartOfSpeech(){
+
+		string getShortPartOfSpeech(){		
 			return partOfSpeechShort;
 		}
 };
@@ -60,24 +86,33 @@ class Adjective : virtual public Word{
 
 class Noun: virtual public Word{
 private:
-	string partOfSpeech = "Noun";
-	string partOfSpeechShort -  "n";
+	string partOfSpeech;
+	string partOfSpeechShort;
 
 public:
-	string getPartOfSpeech(){
+	Noun() : Word(){
+		partOfSpeech = "Noun";
+		partOfSpeechShort = "n";
+	}
+	string getPartOfSpeech(){	
 		return partOfSpeech;
 	}
-	string getShortPartOfSpeech(){
+	string getShortPartOfSpeech(){	
 		return partOfSpeechShort;
 	}
 };
 
 class Verb: virtual public Word{
 private:
-	string partOfSpeech = "Verb";
-	string partOfSpeechShort -  "v";
+	string partOfSpeech;
+	string partOfSpeechShort;
 
 public:
+
+	Verb():Word(){
+		partOfSpeech = "Verb";
+		partOfSpeechShort =  "v";
+	}
 	string getPartOfSpeech(){
 		return partOfSpeech;
 	}
@@ -96,7 +131,7 @@ private:
 	Adjective * myAdjectives;
 	Verb * myVerbs;
 	Noun * myNouns;
-	int totalWords = 0 , totalAdjectives = 0, totalVerbs = 0, totalNouns = 0;
+	int totalWords, totalAdjectives, totalVerbs, totalNouns;
 public:
 
 	/*
@@ -104,6 +139,10 @@ public:
 	*/
 
 	WordLibrary(){
+		totalWords = 0;
+		totalAdjectives = 0;
+		totalVerbs = 0;
+		totalNouns = 0;
 		//Open ioStream
 
 		//First, let's do a count of the data we have.
@@ -164,6 +203,7 @@ public:
 	*/
 
 	Word getRandomWord(){
+		string _partOfSpeech;
 		int randomNumber;
 		if(randomNumber == 1){
 			_partOfSpeech = "noun";
