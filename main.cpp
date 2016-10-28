@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string.h>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -12,6 +14,9 @@ private:
 	string theDef;
 	string theOrigin;
 	int wordLength;
+protected:
+	string partOfSpeech;
+	string partOfSpeechShort;
 public:
 	Word(string _theWord, string _theDef, string _theOrigin = "Unknown"){
 		theWord = _theWord;
@@ -55,6 +60,14 @@ public:
 	string getOrigin(){
 		return theOrigin;
 	}
+
+	string getPartOfSpeech(){		
+		return partOfSpeech;
+	}
+
+	string getShortPartOfSpeech(){		
+		return partOfSpeechShort;
+	}
 };
 
 /*
@@ -62,21 +75,10 @@ public:
 */
 
 class Adjective : virtual public Word{
-	private:
-		string partOfSpeech;
-		string partOfSpeechShort;
 	public:
 		Adjective() : Word(){
 			partOfSpeech = "Adjective";
 			partOfSpeechShort = "Adj";
-		}
-
-		string getPartOfSpeech(){		
-			return partOfSpeech;
-		}
-
-		string getShortPartOfSpeech(){		
-			return partOfSpeechShort;
 		}
 };
 
@@ -85,40 +87,18 @@ class Adjective : virtual public Word{
 */
 
 class Noun: virtual public Word{
-private:
-	string partOfSpeech;
-	string partOfSpeechShort;
-
-public:
+	public:
 	Noun() : Word(){
 		partOfSpeech = "Noun";
 		partOfSpeechShort = "n";
 	}
-	string getPartOfSpeech(){	
-		return partOfSpeech;
-	}
-	string getShortPartOfSpeech(){	
-		return partOfSpeechShort;
-	}
 };
 
 class Verb: virtual public Word{
-private:
-	string partOfSpeech;
-	string partOfSpeechShort;
-
-public:
-
+	public:
 	Verb():Word(){
 		partOfSpeech = "Verb";
 		partOfSpeechShort =  "v";
-	}
-	string getPartOfSpeech(){
-		return partOfSpeech;
-	}
-
-	string getShortPartOfSpeech(){
-		return partOfSpeechShort;
 	}
 };
 
@@ -143,11 +123,13 @@ public:
 		totalAdjectives = 0;
 		totalVerbs = 0;
 		totalNouns = 0;
-		//Open ioStream
+
+		//Open fileStream
+  		ifstream infile( "dictionary.txt" );
 
 		//First, let's do a count of the data we have.
 
-		while(/* File has another line */){
+		while(infile){
 			totalWords++;
 			if(/* Word is an Adjective*/){
 				totalAdjectives++;
@@ -236,7 +218,100 @@ public:
 	}
 };
 
+class Engine(){
+private:
+	int points;
+	const int MAX_GUESSES = 5;
+	WordLibrary myDictionary;
+	Word activeWord;
+	string guessedWord;
+	int numOfRounds;
+	int completedRounds;
+public:
+	Engine(int numOfRounds = 5){
+		completedRounds = 0;		
+		points = 0;
+		activeWord = myDictionary.getRandomWord();
+	}
+
+	addPoint(){
+		points++;
+	}
+
+	void go(){
+		//Pick Random Word;
+		
+		cout << "Definition: " << activeWord.getDef() << endl;
+		cout << "Origin: " << activeWord.getOrigin() << endl;
+		cout << "Part of Speech: " << activeWord.getPartOfSpeech() << endl;
+		
+
+		while(true && guessedWord != "skip"){
+			cout << "Guess the word: ";
+			cin >> guessedWord;
+
+			if(guessedWord == activeWord.getWord()){
+				addPoint();
+				cout << "Correct!" << endl;
+				break;
+			}else{
+				cout << "Incorrect, try again: "
+				continue;
+			}
+		}
+
+		if(completedRounds < numOfRounds){
+			nextWord();
+		}else{
+			cout << "You got " << points << " points, out of a possible " << numOfRounds << "points" << endl;
+		}
+
+
+	}
+
+	void nextWord(){
+		activeWord = myDictionary.getRandomWord();
+		go();
+	}
+}
 
 int main(){
+	string userInput;
+	Engine gameEngine;
+	//Start Game
+	cout << "DICTIONARY GAME" << endl;
+	cout << "-------------------------------" << endl;
+
+	cout << "Menu: " << endl;
+	cout << "Type 'go' to start the game." << endl;
+	cout << "Type 'help' for instructions." << endl;
+	cout << "\n Enter Command: ";
+	cin >> userInput;
+
+	switch(userInput){
+		case "go":
+			cout << "Here we go! Type 'skip' to skip a word. " << endl;
+
+		break;
+
+		case "help":
+
+		break;
+	}
+
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

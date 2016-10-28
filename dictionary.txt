@@ -1,0 +1,3 @@
+n;Computer;A device used for...;English
+v;someverb;a definition of a verb;French
+a;someAdj;a definition of an adjective;Chinese
