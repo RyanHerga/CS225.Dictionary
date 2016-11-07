@@ -1,9 +1,0 @@
-# Dictionary Project
-
-
-Application will:
-
-	1. Load list of words, definitions from an external file
-	2. Provide the user with a dictionary definition
-	3. User will get X chances to guess letters that may be in the word.
-	4. User will be able to /solve [string] to solve the entire word.
