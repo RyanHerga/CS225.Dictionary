@@ -3,6 +3,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 
+void loadLibrary();
 
 [STAThread]
 void Main(void)

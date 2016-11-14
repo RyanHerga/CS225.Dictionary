@@ -1,7 +1,12 @@
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>  
 #include <fstream>
 #include <sstream>
+#include <Windows.h>
+#include <vector>
+#include <utility>
 
 #define MAX_COUNT_ADJ 50
 #define MAX_COUNT_VERB 50
@@ -79,7 +84,8 @@ public:
 
 class Adjective : virtual public Word {
 public:
-	Adjective() : Word() {
+	Adjective(){}
+	Adjective(string _theWord, string _theDef, string _theOrigin = "Unknown") : Word(_theWord, _theDef, _theOrigin) {
 		partOfSpeech = "Adjective";
 		partOfSpeechShort = "Adj";
 	}
@@ -91,7 +97,8 @@ public:
 
 class Noun : virtual public Word {
 public:
-	Noun() : Word() {
+	Noun(){}
+	Noun(string _theWord, string _theDef, string _theOrigin = "Unknown") : Word(_theWord,  _theDef,  _theOrigin) {
 		partOfSpeech = "Noun";
 		partOfSpeechShort = "n";
 	}
@@ -99,7 +106,8 @@ public:
 
 class Verb : virtual public Word {
 public:
-	Verb() :Word() {
+	Verb() {}
+	Verb(string _theWord, string _theDef, string _theOrigin = "Unknown") :Word(_theWord, _theDef, _theOrigin) {
 		partOfSpeech = "Verb";
 		partOfSpeechShort = "v";
 	}
@@ -118,13 +126,34 @@ private:
 public:
 
 	WordLibrary(void) {
-
+	
 	}
+
+	const vector<string> explode(const string& s, const char& c)
+	{
+		string buff{ "" };
+		vector<string> v;
+
+		for (auto n : s)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "") v.push_back(buff);
+
+		return v;
+	}
+
+
 	/*
 	* Loads word library from file and populates Adjectives, nouns, and verbs stack
 	*/
 
 	void init(string fLocation, interior_ptr<System::Windows::Forms::Label^> theLabel) {
+		delete[] myAdjectives;
+		delete[] myVerbs;
+		delete[] myNouns;
+
 		totalWords = 0;
 		totalAdjectives = 0;
 		totalVerbs = 0;
@@ -140,26 +169,45 @@ public:
 		//Count and total the data we have.
 
 		string theWord, theDef, theSpeech;
+		
+		string theLine;
 
-		while (getline(infile, theWord, ',')) {
-			getline(infile, theDef, ',');
-			getline(infile, theSpeech);
+		while (getline(infile, theLine)) {
+
+			auto v = explode(theLine, ',');
+				theWord = v[0];
+				theDef = v[1];
+				theSpeech = v[2];
+			//OutputDebugStringA(theWord.c_str());
 
 			totalWords++;
+			OutputDebugStringA(theSpeech.c_str());
 
 			if (theSpeech == "adj") {
 				totalAdjectives++;
+				//exit(1);
+				string msgToPrint = "Adjective Added" + theWord;
+				OutputDebugStringA(msgToPrint.c_str());
 			}
 			else if (theSpeech == "noun") {
 				totalNouns++;
+				string msgToPrint = "Noun Added: " + theWord;
+				OutputDebugStringA(msgToPrint.c_str());
+				//exit(1);
 			}
 			else if (theSpeech == "verb") {
+				string msgToPrint = "Verb Added: " + theWord;
+				OutputDebugStringA(msgToPrint.c_str());
 				totalVerbs++;
+				
+				//exit(1);
 			}
+
 			push(theSpeech, theWord, theDef);
+			//(*theLabel)->Text = mySpeech;
 		}
 		if (totalWords > 0)
-			(*theLabel)->Text = "" + totalWords + " Words Loaded";
+			(*theLabel)->Text = "" + (totalAdjectives + totalVerbs + totalNouns) + " Words Loaded";
 		else
 			(*theLabel)->Text = "File Empty!";
 	}
@@ -170,23 +218,23 @@ public:
 
 	int push(string _partOfSpeech, string _theWord, string _theDef, string _theOrigin = "Unknown") {
 		if (_partOfSpeech == "adj") {
-			//create new adjective
 			//add to adjective stack
-			totalAdjectives++;
+			Adjective myAdj(_theWord, _theDef, _theOrigin);
+			myAdjectives[totalAdjectives-1] = myAdj;
+
 		}
 		else if (_partOfSpeech == "noun") {
-			//Create new noun
 			//Add to noun stack
-			totalNouns++;
+			Noun myNoun(_theWord, _theDef, _theOrigin);
+			myNouns[totalNouns-1] = myNoun;
+
 		}
-		else if (_partOfSpeech == "verb") {
-			//Create new verb
+		else{
 			//Add to verb stack
-			totalVerbs++;
+			Verb myVerb(_theWord, _theDef, _theOrigin);
+			myVerbs[totalVerbs-1] = myVerb;
 		}
-		else {
-			return -1;
-		}
+
 		return 1;
 	}
 
@@ -197,7 +245,11 @@ public:
 
 	Word getRandomWord() {
 		string _partOfSpeech;
-		int randomNumber;
+		srand(time(0));
+		
+		int randomNumber = rand() % 3;
+	
+
 		if (randomNumber == 1) {
 			_partOfSpeech = "noun";
 		}
@@ -218,17 +270,20 @@ public:
 	*/
 
 	Word getRandomWord(string _partOfSpeech) {
+		int randomNum;
 		if (_partOfSpeech == "noun") {
-			int randomNum; //Set this to random number between 0 and (totalNouns - 1)
+			randomNum = rand() % (totalNouns - 1); //Set this to random number between 0 and (totalNouns - 1)
 			return myNouns[randomNum];
 		}
 		else if (_partOfSpeech == "verb") {
-			int randomNum; //Set this to random number between 0 and (totalVerbs - 1)
+			randomNum = rand() % (totalVerbs - 1);  //Set this to random number between 0 and (totalVerbs - 1)
 			return myVerbs[randomNum];
 		}
 		else if (_partOfSpeech == "adj") {
-			int randomNum; //Set this to random number between 0 and (totalAdjectives - 1)
+			randomNum = rand() % (totalAdjectives - 1); //Set this to random number between 0 and (totalAdjectives - 1)
 			return myAdjectives[randomNum];
 		}
 	}
+
+	
 };

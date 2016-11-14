@@ -1,6 +1,10 @@
-word1, def1, speech1
-word2, def2, speech2
-word3, def3, speech3
-word4, def4, speech4
-word5, def5, speech5
-word6, def6, speech6
+word1,def1,adj
+word2,def2,noun
+word3,def3,verb
+word4,def4,verb
+word5,def5,noun
+word6,def6,adj
+word7,def7,adj
+word8,def8,adj
+word9,def9,noun
+word9,def9,noun
